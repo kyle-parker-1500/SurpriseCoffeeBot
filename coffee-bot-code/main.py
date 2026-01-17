@@ -151,6 +151,9 @@ async def build_coffee(ctx, coffee_type: Optional[str] = "", syrup: Optional[str
     
     await ctx.send(final)
     
+@bot.command(name='test')
+async def test_types(ctx, test_list: list[str]):
+    await ctx.send(test_list)
 
 
 
