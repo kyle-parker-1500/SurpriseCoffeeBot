@@ -12,7 +12,7 @@ import random
 # discord intents
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix=';', intents=intents)
+bot = commands.Bot(command_prefix='-', intents=intents)
 
 # import fastapi api and call from db
 
@@ -23,10 +23,19 @@ db = {
     'toppings': ['Whipped Cream', 'Nutmeg', 'Cinnamon', 'Honey'],
 }
 
+def uniform_box_spacing(word_len):
+    header_len = len("======= Generating Surprise Coffee =======")
+    final = ""
+    final_len = (header_len - word_len) - 1
+    for i in range(0, final_len):
+        final += " "
+
+    final += "="
+    return final
 
 # generating output string for v1 of the coffee bot 1/16/26
 def generate_output():
-    beans_list = []
+    coffee_type_list = []
     syrup_list = []
     toppings_list = []
 
@@ -34,7 +43,7 @@ def generate_output():
     num_toppings = random.randint(1, len(db['toppings']))
     
     # get random bean type
-    beans_list.append(random.choice(db['beans']))
+    coffee_type_list.append(random.choice(db['beans']))
     
     # get random syrups if they don't already exist in the coffee
     for i in range(0, num_syrup):
@@ -53,7 +62,8 @@ def generate_output():
     
     # add beans to output
     output += "**Beans:**" + "\n"
-    output += "- " + beans_list[0] + "\n\n"
+    output += "- " + coffee_type_list[0].title() + "\n"
+    output += "\n"
     
     # add syrups to output
     if len(syrup_list) > 1:
@@ -62,7 +72,7 @@ def generate_output():
         output += "**Syrup:**" + "\n"
 
     for i in range(0, len(syrup_list)):
-        output += "- " + syrup_list[i] + "\n"
+        output += "- " + syrup_list[i].title() + "\n"
     output += "\n"
     
     # add toppings to output
@@ -72,7 +82,7 @@ def generate_output():
         output += "**Topping:**" + "\n"
         
     for i in range(0, len(toppings_list)):
-        output += "- " + toppings_list[i] + "\n"
+        output += "- " + toppings_list[i].title() + "\n"
     output += "\n"
    
     return output
@@ -104,21 +114,25 @@ def process_build(coffee_type, syrup, toppings):
     # beans to string
     final += "**Coffee Type:**\n"
     for item in coffee_type_list:
-        final += "- " + item
+        final += "- " + item.title()
         final += '\n' 
     final += '\n'
         
     # syrup to string
     final += "**Syrup:**\n"
     for item in syrup_list:
-        final += "- " + item
+        final += "- " + item.title()
         final += '\n'
     final += '\n'
         
     # toppings to string
-    final += "**Toppings:**\n"
+    if len(toppings_list) < 2:
+        final += "**Topping:**\n"
+    else:
+        final += "**Toppings:**\n"
+
     for item in toppings_list:
-        final += "- " + item
+        final += "- " + item.title()
         final += '\n'
     final += '\n'
 
